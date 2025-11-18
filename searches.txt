@@ -1,0 +1,5 @@
+- How to round up data in sql?
+
+Link:
+
+    - https://www.w3schools.com/sql/func_sqlserver_round.asp
