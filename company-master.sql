@@ -52,25 +52,14 @@ CREATE TABLE ZIPCODE (
     district varchar(100)
 );
 
-ALTER TABLE companies ADD COLUMN extracted_zip INT;
-
-UPDATE companies
-SET extracted_zip = (
-    regexp_match(Registered_Office_Address, '([0-9]{6})$')
-)[1]::INT;
-
-DROP TABLE IF EXISTS companies_2015;
-
-CREATE TEMP TABLE companies_2015 AS
-SELECT *
-FROM companies
-WHERE EXTRACT(YEAR FROM CompanyRegistrationdate_date) = 2015;
-
 SELECT
-    district,
+    z.district,
     COUNT(*) AS registration_count
-FROM company_districts
-GROUP BY district
+FROM companies c
+JOIN zipcode z
+    ON c.extracted_zip = z.zipcode
+WHERE EXTRACT(YEAR FROM c.CompanyRegistrationdate_date) = 2015
+GROUP BY z.district
 ORDER BY registration_count DESC;
 
 WITH last10 AS (
